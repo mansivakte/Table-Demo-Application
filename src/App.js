@@ -1,24 +1,25 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import Home from "./Components/Home/Home";
+import HeaderMenuDrawer from "./Components/Common/HeaderMenuDrawer/HeaderMenuDrawer";
+import ProductTable from "./Components/Products/ProductTable";
+import UserTable from "./Components/Users/UserTable";
+import ProductDialog from "./Components/Products/ProductDialog";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <HeaderMenuDrawer></HeaderMenuDrawer>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/product" element={<ProductTable />} />
+          <Route path="/productdialog" element={<ProductDialog />} />
+          <Route path="user" element={<UserTable />} />
+        </Routes>
+      </BrowserRouter>
+    </>
   );
 }
 
