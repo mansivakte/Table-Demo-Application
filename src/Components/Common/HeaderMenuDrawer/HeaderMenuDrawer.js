@@ -65,7 +65,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 }));
 
 export default function HeaderMenuDrawer() {
-  // let navigate = useNavigate();
+  let navigate = useNavigate();
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -78,11 +78,16 @@ export default function HeaderMenuDrawer() {
     setOpen(false);
   };
 
-  const menuItems = ["Products", "Categery", "Brand", "Users"];
+  const menuItems = [
+    { leble: "Products", url: "/product" },
+    { leble: "Users", url: "/user" },
+    { leble: "Brand", url: "/brand" },
+    { leble: "Categery", url: "/categery" },
+  ];
 
-  // const onclickHandler = (text) => {
-  //   return navigate(`/product`);
-  // };
+  const onclickHandler = (url) => {
+    return navigate(url);
+  };
   return (
     <Box sx={{ display: "flex" }}>
       <CssBaseline />
@@ -131,10 +136,10 @@ export default function HeaderMenuDrawer() {
               <ListItemButton>
                 <FiberManualRecordIcon></FiberManualRecordIcon>
                 <ListItemText
-                  primary={text}
-                  // onClick={() => {
-                  //   onclickHandler(text);
-                  // }}
+                  primary={text.leble}
+                  onClick={() => {
+                    onclickHandler(text.url);
+                  }}
                 />
               </ListItemButton>
             </ListItem>

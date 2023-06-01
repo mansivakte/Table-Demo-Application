@@ -12,6 +12,9 @@ import TablePaginationDemo from "../Common/Pagination/Pagination";
 import Loader from "../Common/Loader/Loader";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ProductDialog from "./ProductDialog";
+import Button from "@mui/material/Button";
+import DeleteIcon from "@mui/icons-material/Delete";
+import Stack from "@mui/material/Stack";
 
 export default function ProductTable() {
   const [product, setProduct] = useState([]);
@@ -63,11 +66,15 @@ export default function ProductTable() {
     //     foundRecord = record;
     //   }
     // });
-
     const foundRecord = product.find((record) => record.id == id);
     // const foundRecord = product.filter((record) => record.id == id);
     setShowDetails(foundRecord);
     setOpen(true);
+  };
+
+  const deleteHandler = (id) => {
+    setProduct([...product].filter((product) => product.id !== id));
+    alert("Recorde Deleted");
   };
 
   return (
@@ -89,7 +96,7 @@ export default function ProductTable() {
                   <TableCell>Sr.No</TableCell>
                   <TableCell align="left">TITLE</TableCell>
                   <TableCell align="left">PRICE in $</TableCell>
-                  <TableCell align="left">ACTION</TableCell>
+                  <TableCell align="left">Action</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -104,11 +111,24 @@ export default function ProductTable() {
                     <TableCell align="left">{row.title}</TableCell>
                     <TableCell align="left">$ {row.price}</TableCell>
                     <TableCell align="left">
-                      <VisibilityIcon
-                        onClick={() => {
-                          viewHandler(row.id);
-                        }}
-                      />
+                      <Stack
+                        direction="row"
+                        spacing={1.5}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <VisibilityIcon
+                          width={30}
+                          onClick={() => {
+                            viewHandler(row.id);
+                          }}
+                        />
+                        <DeleteIcon
+                          width={30}
+                          onClick={() => {
+                            deleteHandler(row.id);
+                          }}
+                        />
+                      </Stack>
                     </TableCell>
                   </TableRow>
                 ))}
