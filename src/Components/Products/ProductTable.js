@@ -12,9 +12,10 @@ import TablePaginationDemo from "../Common/Pagination/Pagination";
 import Loader from "../Common/Loader/Loader";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import ProductDialog from "./ProductDialog";
-import Button from "@mui/material/Button";
 import DeleteIcon from "@mui/icons-material/Delete";
 import Stack from "@mui/material/Stack";
+import EditIcon from "@mui/icons-material/Edit";
+import ProductEditForm from "./ProductEditForm";
 
 export default function ProductTable() {
   const [product, setProduct] = useState([]);
@@ -29,6 +30,8 @@ export default function ProductTable() {
 
   const [open, setOpen] = useState(false);
   const [showDetails, setShowDetails] = useState({});
+
+  const [editorOpen, setEditorOpen] = useState(false);
 
   useEffect(() => {
     axios
@@ -77,6 +80,12 @@ export default function ProductTable() {
     alert("Recorde Deleted");
   };
 
+  const editHandler = (product) => {
+    // setProduct();
+
+    setEditorOpen(true);
+  };
+
   return (
     <div style={{ height: 400, width: "100%" }}>
       <h3>Product Table</h3>
@@ -88,6 +97,10 @@ export default function ProductTable() {
             open={open}
             setOpen={setOpen}
             showDetails={showDetails}
+          />
+          <ProductEditForm
+            editorOpen={editorOpen}
+            setEditorOpen={setEditorOpen}
           />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -126,6 +139,12 @@ export default function ProductTable() {
                           width={30}
                           onClick={() => {
                             deleteHandler(row.id);
+                          }}
+                        />
+                        <EditIcon
+                          width={30}
+                          onClick={() => {
+                            editHandler(row);
                           }}
                         />
                       </Stack>
