@@ -16,9 +16,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import Stack from "@mui/material/Stack";
 import EditIcon from "@mui/icons-material/Edit";
 import ProductEditForm from "./ProductEditForm";
+import Tooltip from "@mui/material/Tooltip";
 
 export default function ProductTable() {
   const [product, setProduct] = useState([]);
+  const [updatedProduct, setUpdatedProduct] = useState({});
   const [productCount, setProductCount] = useState(0);
 
   const [page, setPage] = useState(0);
@@ -80,11 +82,34 @@ export default function ProductTable() {
     alert("Recorde Deleted");
   };
 
-  const editHandler = (product) => {
-    // setProduct();
-
+  const editHandler = (row) => {
+    setUpdatedProduct(row);
     setEditorOpen(true);
   };
+
+  const onSubmitHandler = (productTitle, productPrice) => {
+    const UpdatedRecord = product.map((record) => {
+      if (record.id == updatedProduct.id) {
+        record.title = productTitle;
+        record.price = productPrice;
+      }
+      return record;
+    });
+    setProduct(UpdatedRecord);
+  };
+
+  //   let productRecord = {};
+  //   const Data = props.product.map((record) => {
+  //     if (record.id == props.editedData.id) {
+  //       productRecord = record;
+  //     }
+  //   });
+  // };
+
+  // const EditedProductData = (productTitle, productPrice) => {
+  //   console.log("productTitle=>", productTitle);
+  //   console.log("productPrice=>", productPrice);
+  // };
 
   return (
     <div style={{ height: 400, width: "100%" }}>
@@ -101,6 +126,8 @@ export default function ProductTable() {
           <ProductEditForm
             editorOpen={editorOpen}
             setEditorOpen={setEditorOpen}
+            onSubmitHandler={onSubmitHandler}
+            updatedProduct={updatedProduct}
           />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -129,24 +156,32 @@ export default function ProductTable() {
                         spacing={1.5}
                         style={{ cursor: "pointer" }}
                       >
-                        <VisibilityIcon
-                          width={30}
-                          onClick={() => {
-                            viewHandler(row.id);
-                          }}
-                        />
-                        <DeleteIcon
-                          width={30}
-                          onClick={() => {
-                            deleteHandler(row.id);
-                          }}
-                        />
-                        <EditIcon
-                          width={30}
-                          onClick={() => {
-                            editHandler(row);
-                          }}
-                        />
+                        <Tooltip title="View">
+                          <VisibilityIcon
+                            width={30}
+                            onClick={() => {
+                              viewHandler(row.id);
+                            }}
+                          />
+                        </Tooltip>
+
+                        <Tooltip title="Delete">
+                          <DeleteIcon
+                            width={30}
+                            onClick={() => {
+                              deleteHandler(row.id);
+                            }}
+                          />
+                        </Tooltip>
+
+                        <Tooltip title="Edit">
+                          <EditIcon
+                            width={30}
+                            onClick={() => {
+                              editHandler(row);
+                            }}
+                          />
+                        </Tooltip>
                       </Stack>
                     </TableCell>
                   </TableRow>
