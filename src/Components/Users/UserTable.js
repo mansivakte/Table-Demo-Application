@@ -13,6 +13,11 @@ import TablePaginationDemo from "../Common/Pagination/Pagination";
 import Loader from "../Common/Loader/Loader";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import UserDialog from "./UserDialog";
+import { Stack, Tooltip } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import ProductEditForm from "./UserEditForm";
+import UserEditForm from "./UserEditForm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -47,6 +52,9 @@ export default function UserTable() {
   const [rowsPerPage, setRowsPerPage] = useState(25);
   const [currentPage, setCurrentPage] = useState(0);
   const [offsetPage, setOffsetPage] = useState(0);
+  // edit form
+  const [editorOpen, setEditorOpen] = useState(false);
+  const [updatedUser, setUpdatedUser] = useState({});
 
   useEffect(() => {
     axios
@@ -76,10 +84,30 @@ export default function UserTable() {
       });
   }, [page, rowsPerPage, offsetPage, currentPage]);
 
-  const detailsHandler = (id) => {
+  const viewHandler = (id) => {
     const foundUser = users.find((record) => record.id == id);
     setUserDetails(foundUser);
     setOpen(true);
+  };
+
+  const editHandler = (row) => {
+    setUpdatedUser(row);
+    setEditorOpen(true);
+  };
+
+  const deleteHandler = (id) => {
+    setUsers([...users].filter((users) => users.id !== id));
+    alert(" This user record is a success deleted!");
+  };
+
+  const onSubmitHandler = (userName) => {
+    const ChangedRecord = users.map((record) => {
+      if (record.id == updatedUser.id) {
+        record.title = userName;
+      }
+      return record;
+    });
+    setUsers(ChangedRecord);
   };
 
   return (
@@ -90,6 +118,12 @@ export default function UserTable() {
       ) : (
         <>
           <UserDialog setOpen={setOpen} open={open} userDetails={userDetails} />
+          <UserEditForm
+            editorOpen={editorOpen}
+            setEditorOpen={setEditorOpen}
+            updatedUser={updatedUser}
+            onSubmitHandler={onSubmitHandler}
+          />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
               <TableHead>
@@ -113,11 +147,33 @@ export default function UserTable() {
                       {row.price} gm
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <VisibilityIcon
-                        onClick={() => {
-                          detailsHandler(row.id);
-                        }}
-                      ></VisibilityIcon>
+                      <Stack
+                        direction="row"
+                        spacing={1.5}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <Tooltip title="View">
+                          <VisibilityIcon
+                            onClick={() => {
+                              viewHandler(row.id);
+                            }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Edit">
+                          <EditIcon
+                            onClick={() => {
+                              editHandler(row);
+                            }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <DeleteIcon
+                            onClick={() => {
+                              deleteHandler(row.id);
+                            }}
+                          />
+                        </Tooltip>
+                      </Stack>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}

@@ -42,7 +42,7 @@ export default function ProductEditForm(props) {
             autoFocus
             margin="dense"
             id="name"
-            label="Title"
+            // label="Title"
             type="text"
             fullWidth
             variant="standard"
@@ -54,7 +54,7 @@ export default function ProductEditForm(props) {
             autoFocus
             margin="dense"
             id="name"
-            label="Price"
+            // label="Price"
             type="text"
             fullWidth
             variant="standard"

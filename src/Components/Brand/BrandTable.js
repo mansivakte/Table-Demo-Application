@@ -13,6 +13,10 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import Loader from "../Common/Loader/Loader";
 import Pagination from "../Common/Pagination/Pagination";
 import BrandDialog from "./BrandDialog";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import { Stack, Tooltip } from "@mui/material";
+import BrandEditForm from "./BrandEditForm";
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -48,6 +52,9 @@ export default function BrandTable() {
   const [currentPage, setCurrentPage] = useState(0);
   const [offsetPage, setOffsetPage] = useState(0);
 
+  const [updatedBrand, setUpdatedBrand] = useState({});
+  const [editorOpen, setEditorOpen] = useState(false);
+
   useEffect(() => {
     axios
       .get("https://api.escuelajs.co/api/v1/products")
@@ -76,11 +83,31 @@ export default function BrandTable() {
       });
   }, [page, rowsPerPage, currentPage, offsetPage]);
 
-  const onClickHandler = (id) => {
+  const viewHandler = (id) => {
     const foundRecord = brand.find((record) => record.id == id);
     setBrandDetails(foundRecord);
     console.log("Found Brand Record=>", foundRecord);
     setOpen(true);
+  };
+
+  const editorHandler = (row) => {
+    setUpdatedBrand(row);
+    setEditorOpen(true);
+  };
+
+  const onSubmitHandler = (brandName) => {
+    const changedRecored = brand.map((record) => {
+      if (record.id == updatedBrand.id) {
+        record.category.name = brandName;
+      }
+      return record;
+    });
+    setBrand(changedRecored);
+  };
+
+  const deleteHandler = (id) => {
+    setBrand([...brand].filter((brand) => brand.id !== id));
+    alert("Recorde Deleted");
   };
 
   return (
@@ -94,6 +121,12 @@ export default function BrandTable() {
             open={open}
             setOpen={setOpen}
             brandDetails={brandDetails}
+          />
+          <BrandEditForm
+            editorOpen={editorOpen}
+            setEditorOpen={setEditorOpen}
+            updatedBrand={updatedBrand}
+            onSubmitHandler={onSubmitHandler}
           />
           <TableContainer component={Paper}>
             <Table sx={{ minWidth: 700 }} aria-label="customized table">
@@ -122,11 +155,33 @@ export default function BrandTable() {
                       {row.category.updatedAt}
                     </StyledTableCell>
                     <StyledTableCell align="left">
-                      <VisibilityIcon
-                        onClick={() => {
-                          onClickHandler(row.id);
-                        }}
-                      />
+                      <Stack
+                        direction="row"
+                        spacing={1.5}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <Tooltip title="view">
+                          <VisibilityIcon
+                            onClick={() => {
+                              viewHandler(row.id);
+                            }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Edit">
+                          <EditIcon
+                            onClick={() => {
+                              editorHandler(row);
+                            }}
+                          />
+                        </Tooltip>
+                        <Tooltip title="Delete">
+                          <DeleteIcon
+                            onClick={() => {
+                              deleteHandler(row.id);
+                            }}
+                          />
+                        </Tooltip>
+                      </Stack>
                     </StyledTableCell>
                   </StyledTableRow>
                 ))}
