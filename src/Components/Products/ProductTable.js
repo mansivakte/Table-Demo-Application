@@ -79,7 +79,7 @@ export default function ProductTable() {
 
   const deleteHandler = (id) => {
     setProduct([...product].filter((product) => product.id !== id));
-    alert("Recorde Deleted");
+    alert("record deleted!");
   };
 
   const editHandler = (row) => {
